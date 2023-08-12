@@ -3,25 +3,40 @@ import Toybox.System;
 import Toybox.Timer;
 import Toybox.WatchUi;
 
-
-
 class StayAwakeHelperView extends WatchUi.View {
 
-    var myTimer;
+    var clockTimer;
+    var stayAwakeTimer;
 
-    function setupTimer() {
-        System.println("SETTING UP TIMER");
-        myTimer = new Timer.Timer();
-        myTimer.start(method(:doUpdate), 1000, true);
+    function setupTimers() {
+        clockTimer = new Timer.Timer();
+        clockTimer.start(method(:updateUI), 1000, true);
+
+        stayAwakeTimer = new Timer.Timer();
+        stayAwakeTimer.start(method(:doStayAwakeBehavior), 5000, true);
     }
 
-    function doUpdate() as Void {
+    function updateUI() as Void {
         WatchUi.requestUpdate();
+    }
+
+    function doStayAwakeBehavior() as Void {
+        // Vibrate
+        if (Toybox.Attention has :vibrate) {
+            var vibeData =
+            [
+                new Attention.VibeProfile(25, 2000)
+            ];
+
+            Toybox.Attention.vibrate(vibeData);
+        }
+
+        // TODO - Sound
     }
 
     function initialize() {
         View.initialize();
-        setupTimer();
+        setupTimers();
     }
 
     // Load your resources here
