@@ -23,9 +23,13 @@ class StayAwakeHelperMenuDelegate extends WatchUi.MenuInputDelegate {
 
         WatchUi.pushView(
             new NumberPicker(1, 60, Rez.Strings.duration_minutes),
-            new NumberPickerDelegate(),
+            new NumberPickerDelegate(method(:pickerDelegateCallback)),
             WatchUi.SLIDE_DOWN
         );
+    }
+
+    function pickerDelegateCallback(success, value) {
+        System.println("Picker delegate callback: " + success + ", " +  value.toString());
     }
 
     function onVibrationDuration() as Void {

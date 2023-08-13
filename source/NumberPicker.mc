@@ -5,20 +5,19 @@ import Toybox.WatchUi;
 
 class NumberPicker extends WatchUi.Picker {
 
-    hidden var minValue;
-    hidden var maxValue;
-    hidden var titleString;
+    hidden var _minValue;
+    hidden var _maxValue;
 
-	function initialize(min, max, title){
+	function initialize(minValue, maxValue, titleString){
 
-        minValue = min;
-        maxValue = max;
+        _minValue = minValue;
+        _maxValue = maxValue;
 
 		var titleText = new WatchUi.Text({
-            :text=>title,
-            :locX=>WatchUi.LAYOUT_HALIGN_CENTER,
-            :locY=>WatchUi.LAYOUT_VALIGN_TOP,
-            :color=>Graphics.COLOR_WHITE
+            :text => titleString,
+            :locX => WatchUi.LAYOUT_HALIGN_CENTER,
+            :locY => WatchUi.LAYOUT_VALIGN_TOP,
+            :color => Graphics.COLOR_WHITE
         });
 
 		WatchUi.Picker.initialize({ :title => titleText, :pattern => createPickerPattern() });
@@ -28,14 +27,20 @@ class NumberPicker extends WatchUi.Picker {
 
 	function createPickerPattern() {
 		var pattern = new [1];
-	    pattern[0] = new NumberPickerFactory(minValue, maxValue);
+	    pattern[0] = new NumberPickerFactory(_minValue, _maxValue);
 		return pattern;
 	}
 }
 
 class NumberPickerDelegate extends WatchUi.PickerDelegate {
     
-    function initialize() {
+    hidden var _callback;
+
+    // callback:
+    //  - success (bool)
+    //  - picked value (number) (0 if success is false)
+    function initialize(callback) {
+        _callback = callback;
         PickerDelegate.initialize();
     }
 
@@ -43,12 +48,14 @@ class NumberPickerDelegate extends WatchUi.PickerDelegate {
         var val = values[0];
         System.println("Picked value: " + val.toString());
 
+        _callback.invoke(true, val);
         WatchUi.popView(WatchUi.SLIDE_DOWN);
         return true;
     }
 
     function onCancel() as Boolean {
         System.println("Picker canceled.");
+        _callback.invoke(false, 0);
         WatchUi.popView(WatchUi.SLIDE_DOWN);
         return false;
     }
@@ -56,12 +63,12 @@ class NumberPickerDelegate extends WatchUi.PickerDelegate {
 
 class NumberPickerFactory extends WatchUi.PickerFactory {
 
-    hidden var minValue;
-    hidden var maxValue;
+    hidden var _minValue;
+    hidden var _maxValue;
     
-    function initialize(min, max) {
-        minValue = min;
-        maxValue = max;
+    function initialize(minValue, maxValue) {
+        _minValue = minValue;
+        _maxValue = maxValue;
 
         PickerFactory.initialize();
     }
@@ -77,10 +84,10 @@ class NumberPickerFactory extends WatchUi.PickerFactory {
     }
 
     function getValue(index) {
-        return index + minValue;
+        return index + _minValue;
     }
 
     function getSize() {
-        return maxValue - minValue + 1;
+        return _maxValue - _minValue + 1;
     }
 }
