@@ -3,6 +3,9 @@
 
     <string id="prompt">Click the menu button</string>
 
-    <string id="menu_label_1">Item 1</string>
-    <string id="menu_label_2">Item 2</string>
+    <string id="menu_vibration_interval">Vibration interval</string>
+    <string id="menu_vibration_duration">Vibration duration</string>
+    <string id="menu_vibration_strength">Vibration strength</string>
+
+    <string id="duration_minutes">Minutes</string>
 </strings>

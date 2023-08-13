@@ -13,7 +13,7 @@ class StayAwakeHelperView extends WatchUi.View {
         clockTimer.start(method(:updateUI), 1000, true);
 
         stayAwakeTimer = new Timer.Timer();
-        stayAwakeTimer.start(method(:doStayAwakeBehavior), 5000, true);
+        stayAwakeTimer.start(method(:doStayAwakeBehavior), 20000, true);
     }
 
     function updateUI() as Void {
