@@ -8,4 +8,5 @@
     <string id="menu_vibration_strength">Vibration strength</string>
 
     <string id="duration_minutes">Minutes</string>
+    <string id="strength_percent">Strength %</string>
 </strings>

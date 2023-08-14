@@ -1,10 +1,7 @@
 import Toybox.Application.Storage;
 
 class UserSettings {
-    var AlertIntervalSeconds;
-    var VibrationDurationSeconds;
-    var VibrationStrength;
-
+    
     hidden var alertIntervalKeyName = "alert_interval";
     hidden var vibrationDurationKeyName = "vibration_duration";
     hidden var vibrationStrengthKeyName = "vibration_strength";
@@ -13,10 +10,14 @@ class UserSettings {
     hidden var defaultVibrationDuration = 1;
     hidden var defaultVibrationStrength = 25;
 
+    var AlertIntervalSeconds = defaultAlertInterval;
+    var VibrationDurationSeconds = defaultVibrationDuration;
+    var VibrationStrengthPercent = defaultVibrationStrength;
+
     function LoadSettings() {
         AlertIntervalSeconds = Storage.getValue(alertIntervalKeyName);
         VibrationDurationSeconds = Storage.getValue(vibrationDurationKeyName);
-        VibrationStrength = Storage.getValue(vibrationStrengthKeyName);
+        VibrationStrengthPercent = Storage.getValue(vibrationStrengthKeyName);
 
         if (AlertIntervalSeconds == null) {
             AlertIntervalSeconds = defaultAlertInterval;
@@ -24,8 +25,8 @@ class UserSettings {
         if (VibrationDurationSeconds == null) {
             VibrationDurationSeconds = defaultVibrationDuration;
         }
-        if (VibrationStrength == null) {
-            VibrationStrength = defaultVibrationStrength;
+        if (VibrationStrengthPercent == null) {
+            VibrationStrengthPercent = defaultVibrationStrength;
         }
     }
 
@@ -39,16 +40,16 @@ class UserSettings {
         Storage.setValue(vibrationDurationKeyName, VibrationDurationSeconds);
     }
 
-    function SetVibrationStrength(strength) {
-        VibrationStrength = strength;
-        Storage.setValue(vibrationStrengthKeyName, VibrationStrength);
+    function SetVibrationStrength(strengthPercent) {
+        VibrationStrengthPercent = strengthPercent;
+        Storage.setValue(vibrationStrengthKeyName, VibrationStrengthPercent);
     }
 
     function DebugPrint() {
         System.println("User settings: --------------------");
         System.println("    Alert interval: " + AlertIntervalSeconds);
         System.println("    Vibration duration: " + VibrationDurationSeconds);
-        System.println("    Vibration strength: " + VibrationStrength);
+        System.println("    Vibration strength: " + VibrationStrengthPercent);
         System.println("-----------------------------------");
     }
 }

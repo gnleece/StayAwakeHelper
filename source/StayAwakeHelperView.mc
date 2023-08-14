@@ -34,7 +34,10 @@ class StayAwakeHelperView extends WatchUi.View {
         if (Toybox.Attention has :vibrate) {
             var vibeData =
             [
-                new Attention.VibeProfile(25, 2000)
+                new Attention.VibeProfile(
+                    _userSettings.VibrationStrengthPercent,
+                    _userSettings.VibrationDurationSeconds * 1000
+                )
             ];
 
             Toybox.Attention.vibrate(vibeData);
@@ -91,6 +94,10 @@ class StayAwakeHelperView extends WatchUi.View {
     function setAlertInterval(intervalSeconds) {
         _userSettings.SetAlertInterval(intervalSeconds);
         _secondsUntilNextAlert = _userSettings.AlertIntervalSeconds;
+    }
+
+    function setVibrationStrength(strengthPercent) {
+        _userSettings.SetVibrationStrength(strengthPercent);
     }
 
     function updateClockTimeLabel() {

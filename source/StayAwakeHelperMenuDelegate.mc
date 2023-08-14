@@ -14,38 +14,52 @@ class StayAwakeHelperMenuDelegate extends WatchUi.MenuInputDelegate {
 
     function onMenuItem(item as Symbol) as Void {
         if (item == :alert_interval) {
-            onAlertInterval();
+            onAlertIntervalMenuItem();
         } else if (item == :vibration_duration) {
-            onVibrationDuration();
+            onVibrationDurationMenuItem();
         } else if (item == :vibration_strength) {
-            onVibrationDuration();
+            onVibrationStrengthMenuItem();
         }
     }
 
-    function onAlertInterval() as Void {
+    function onAlertIntervalMenuItem() as Void {
         System.println("Selected menu option: alert interval");
 
         WatchUi.pushView(
             new NumberPicker(1, 60, Rez.Strings.duration_minutes),
-            new NumberPickerDelegate(method(:pickerDelegateCallback)),
+            new NumberPickerDelegate(method(:alertIntervalPickerCallback)),
             WatchUi.SLIDE_DOWN
         );
     }
 
-    function pickerDelegateCallback(success, value) {
-        System.println("Picker delegate callback: " + success + ", " +  value.toString());
+    function onVibrationDurationMenuItem() as Void {
+        System.println("Selected menu option: vibration duration");
+    }
+
+    function onVibrationStrengthMenuItem() as Void {
+        System.println("Selected menu option: vibration strength");
+
+        WatchUi.pushView(
+            new NumberPicker(0, 100, Rez.Strings.strength_percent),
+            new NumberPickerDelegate(method(:vibrationStrengthPickerCallback)),
+            WatchUi.SLIDE_DOWN
+        );
+    }
+
+    function alertIntervalPickerCallback(success, value) {
+        System.println("Alert interval callback: " + success + ", " +  value.toString());
 
         if (success) {
             _view.setAlertInterval(value);
         }
     }
 
-    function onVibrationDuration() as Void {
-        System.println("Selected menu option: vibration duration");
-    }
+    function vibrationStrengthPickerCallback(success, value) {
+        System.println("Vibration strength callback: " + success + ", " +  value.toString());
 
-    function onVibrationStrength() as Void {
-        System.println("Selected menu option: vibration strength");
+        if (success) {
+            _view.setVibrationStrength(value);
+        }
     }
 }
 
