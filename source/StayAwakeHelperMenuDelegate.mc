@@ -9,8 +9,8 @@ class StayAwakeHelperMenuDelegate extends WatchUi.MenuInputDelegate {
     }
 
     function onMenuItem(item as Symbol) as Void {
-        if (item == :vibration_interval) {
-            onVibrationInterval();
+        if (item == :alert_interval) {
+            onAlertInterval();
         } else if (item == :vibration_duration) {
             onVibrationDuration();
         } else if (item == :vibration_strength) {
@@ -18,8 +18,8 @@ class StayAwakeHelperMenuDelegate extends WatchUi.MenuInputDelegate {
         }
     }
 
-    function onVibrationInterval() as Void {
-        System.println("Selected menu option: vibration interval");
+    function onAlertInterval() as Void {
+        System.println("Selected menu option: alert interval");
 
         WatchUi.pushView(
             new NumberPicker(1, 60, Rez.Strings.duration_minutes),

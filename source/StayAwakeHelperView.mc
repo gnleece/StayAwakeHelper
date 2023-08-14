@@ -5,23 +5,31 @@ import Toybox.WatchUi;
 
 class StayAwakeHelperView extends WatchUi.View {
 
-    var clockTimer;
-    var stayAwakeTimer;
+    var isRunning = false;
+
+    var updateTimer;
+
+    var alertInterval = 5;
+    var secondsUntilNextAlert = alertInterval;
 
     function setupTimers() {
-        clockTimer = new Timer.Timer();
-        clockTimer.start(method(:updateUI), 1000, true);
-
-        stayAwakeTimer = new Timer.Timer();
-        stayAwakeTimer.start(method(:doStayAwakeBehavior), 20000, true);
+        updateTimer = new Timer.Timer();
+        updateTimer.start(method(:onTimerUpdate), 1000, true);
     }
 
-    function updateUI() as Void {
+    function onTimerUpdate() as Void {
+        if (isRunning) {
+            secondsUntilNextAlert--;
+        }
+        if (secondsUntilNextAlert <= 0) {
+            triggerAlert();
+            secondsUntilNextAlert = alertInterval;
+        }
+
         WatchUi.requestUpdate();
     }
 
-    function doStayAwakeBehavior() as Void {
-        // Vibrate
+    function triggerAlert() as Void {
         if (Toybox.Attention has :vibrate) {
             var vibeData =
             [
@@ -30,8 +38,6 @@ class StayAwakeHelperView extends WatchUi.View {
 
             Toybox.Attention.vibrate(vibeData);
         }
-
-        // TODO - Sound
     }
 
     function initialize() {
@@ -52,10 +58,8 @@ class StayAwakeHelperView extends WatchUi.View {
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
-        var clockTime = Toybox.System.getClockTime();
-        var clockTimeString = clockTime.hour.format("%02d") + ":" + clockTime.min.format("%02d") + ":" + clockTime.sec.format("%02d");
-        var clockTimeLabel = View.findDrawableById("clockTime") as WatchUi.Text;
-        clockTimeLabel.setText(clockTimeString);
+        updateClockTimeLabel();
+        updateAlertCountdownLabel();
 
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
@@ -65,6 +69,37 @@ class StayAwakeHelperView extends WatchUi.View {
     // state of this View here. This includes freeing resources from
     // memory.
     function onHide() as Void {
+    }
+
+    function onSelect() {
+        System.println("View - onselect");
+
+        isRunning = !isRunning;
+
+        if (isRunning) {
+            System.println("Alert timer start");
+        } else {
+            System.println("Alert timer stop");
+        }
+    }
+
+    function updateClockTimeLabel() {
+        var clockTime = Toybox.System.getClockTime();
+
+        var ampm = clockTime.hour > 12 ? "pm" : "am";
+        var clockTimeString = (clockTime.hour%12) + ":" + clockTime.min.format("%02d") + " " + ampm;
+
+        var clockTimeLabel = View.findDrawableById("clockTime") as WatchUi.Text;
+        clockTimeLabel.setText(clockTimeString);
+    }
+
+    function updateAlertCountdownLabel() {
+        if (!isRunning) {
+            return;
+        }
+
+        var alertCountdownLabel = View.findDrawableById("countdownTime") as WatchUi.Text;
+        alertCountdownLabel.setText(secondsUntilNextAlert.toString());
     }
 
 }

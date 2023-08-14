@@ -1,9 +1,9 @@
 <strings>
     <string id="AppName">StayAwakeHelper</string>
 
-    <string id="prompt">Click the menu button</string>
+    <string id="prompt">Press Start</string>
 
-    <string id="menu_vibration_interval">Vibration interval</string>
+    <string id="menu_alert_interval">Alert interval</string>
     <string id="menu_vibration_duration">Vibration duration</string>
     <string id="menu_vibration_strength">Vibration strength</string>
 

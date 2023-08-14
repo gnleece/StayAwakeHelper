@@ -1,5 +1,5 @@
 <menu id="MainMenu">
-    <menu-item id="vibration_interval" label="@Strings.menu_vibration_interval" />
+    <menu-item id="alert_interval" label="@Strings.menu_alert_interval" />
     <menu-item id="vibration_duration" label="@Strings.menu_vibration_duration" />
     <menu-item id="vibration_strength" label="@Strings.menu_vibration_strength" />
 </menu>
