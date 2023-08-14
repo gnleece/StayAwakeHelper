@@ -12,7 +12,12 @@ class StayAwakeHelperDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onMenu() as Boolean {
-        WatchUi.pushView(new Rez.Menus.MainMenu(), new StayAwakeHelperMenuDelegate(), WatchUi.SLIDE_UP);
+        WatchUi.pushView(
+            new Rez.Menus.MainMenu(),
+            new StayAwakeHelperMenuDelegate(_view),
+            WatchUi.SLIDE_UP
+        );
+        
         return true;
     }
 

@@ -5,25 +5,26 @@ import Toybox.WatchUi;
 
 class StayAwakeHelperView extends WatchUi.View {
 
-    var isRunning = false;
+    var _userSettings;
 
-    var updateTimer;
+    var _isRunning = false;
+    var _secondsUntilNextAlert = 0;
 
-    var alertInterval = 5;
-    var secondsUntilNextAlert = alertInterval;
-
+    var _updateTimer;
+    
     function setupTimers() {
-        updateTimer = new Timer.Timer();
-        updateTimer.start(method(:onTimerUpdate), 1000, true);
+        _updateTimer = new Timer.Timer();
+        _updateTimer.start(method(:onTimerUpdate), 1000, true);
     }
 
     function onTimerUpdate() as Void {
-        if (isRunning) {
-            secondsUntilNextAlert--;
-        }
-        if (secondsUntilNextAlert <= 0) {
-            triggerAlert();
-            secondsUntilNextAlert = alertInterval;
+        if (_isRunning) {
+            _secondsUntilNextAlert--;
+
+            if (_secondsUntilNextAlert <= 0) {
+                triggerAlert();
+                _secondsUntilNextAlert = _userSettings.AlertIntervalSeconds;
+            }
         }
 
         WatchUi.requestUpdate();
@@ -43,6 +44,10 @@ class StayAwakeHelperView extends WatchUi.View {
     function initialize() {
         View.initialize();
         setupTimers();
+
+        _userSettings = new UserSettings();
+        _userSettings.LoadSettings();
+        _userSettings.DebugPrint();
     }
 
     // Load your resources here
@@ -74,13 +79,18 @@ class StayAwakeHelperView extends WatchUi.View {
     function onSelect() {
         System.println("View - onselect");
 
-        isRunning = !isRunning;
+        _isRunning = !_isRunning;
 
-        if (isRunning) {
+        if (_isRunning) {
             System.println("Alert timer start");
         } else {
             System.println("Alert timer stop");
         }
+    }
+
+    function setAlertInterval(intervalSeconds) {
+        _userSettings.SetAlertInterval(intervalSeconds);
+        _secondsUntilNextAlert = _userSettings.AlertIntervalSeconds;
     }
 
     function updateClockTimeLabel() {
@@ -94,12 +104,12 @@ class StayAwakeHelperView extends WatchUi.View {
     }
 
     function updateAlertCountdownLabel() {
-        if (!isRunning) {
+        if (!_isRunning) {
             return;
         }
 
         var alertCountdownLabel = View.findDrawableById("countdownTime") as WatchUi.Text;
-        alertCountdownLabel.setText(secondsUntilNextAlert.toString());
+        alertCountdownLabel.setText(_secondsUntilNextAlert.toString());
     }
 
 }

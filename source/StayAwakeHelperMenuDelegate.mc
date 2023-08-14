@@ -4,7 +4,11 @@ import Toybox.WatchUi;
 
 class StayAwakeHelperMenuDelegate extends WatchUi.MenuInputDelegate {
 
-    function initialize() {
+    hidden var _view;
+
+    function initialize(view) {
+        _view = view;
+
         MenuInputDelegate.initialize();
     }
 
@@ -30,6 +34,10 @@ class StayAwakeHelperMenuDelegate extends WatchUi.MenuInputDelegate {
 
     function pickerDelegateCallback(success, value) {
         System.println("Picker delegate callback: " + success + ", " +  value.toString());
+
+        if (success) {
+            _view.setAlertInterval(value);
+        }
     }
 
     function onVibrationDuration() as Void {
